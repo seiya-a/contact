@@ -4,8 +4,12 @@
   "description": "Potepan Web Course - Contact Form",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:css": "tailwindcss -i ./input.css -o ./output.css --watch"
   },
   "author": "Seiya-a",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.4"
+  }
 }
