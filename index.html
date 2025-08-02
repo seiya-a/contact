@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ</title>
+  </head>
+
+  <body>
+    <section>
+      <div>
+        <h1>お問い合わせ</h1>
+        <p>サービスに関するご相談など、お気軽にお問い合わせください。<br />
+          お問合せ内容の確認後、担当者よりご連絡致します。
+          下記よりお問い合わせになりたい項目をご選択ください。</p>
+      </div>
+
+      <div>
+        <form method="GET">
+          <div>
+            <label for="subject">お問い合わせ項目</label>
+            <select id="subject" required>
+              <option value="">選択してください</option>
+              <option value="サイト制作・サービス開発のご相談">サイト制作・サービス開発のご相談</option>
+              <option value="マーケティングのご相談">マーケティングのご相談</option>
+              <option value="コンサルティングのご相談">コンサルティングのご相談</option>
+              <option value="コンテンツ制作のご相談">コンテンツ制作のご相談</option>
+              <option value="運用・保守のご相談">運用・保守のご相談</option>
+              <option value="Workshopのご相談">Workshopのご相談</option>
+              <option value="広報・取材のご相談">広報・取材のご相談</option>
+              <option value="その他（事業提携など）">その他（事業提携など）</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="name">お名前(漢字)</label>
+            <input id="name" type="text" required />
+          </div>
+
+          <div>
+            <label for="company">会社名</label>
+            <input id="company" type="text" />
+          </div>
+
+          <div>
+            <label for="email">メールアドレス</label>
+            <input id="email" type="email" required />
+          </div>
+
+          <div>
+            <label for="content">お問い合わせ内容</label>
+            <input id="content" type="text" required />
+          </div>
+
+          <div>
+            <button type="submit">
+              送信する
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>
