@@ -817,10 +817,6 @@ video {
   height: 1.25rem;
 }
 
-.h-screen {
-  height: 100vh;
-}
-
 .w-11\/12 {
   width: 91.666667%;
 }
@@ -2559,6 +2555,15 @@ video {
 
 .hover\:focus\:text-center:focus:hover {
   text-align: center;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}
+
+.disabled\:bg-slate-300:disabled {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
 @media (min-width: 640px) {
