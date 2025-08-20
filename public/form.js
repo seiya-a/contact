@@ -1,5 +1,7 @@
 const formEl = document.getElementById("contact-form");
-const buttonEl = document.getElementById("submit");
+console.log("formEl:", formEl);
+const buttonEl = document.getElementById("submit-button");
+const errorEl = document.getElementById("error");
 const checkboxEl = document.getElementById("agree");
 
 async function sendContact(contact) {
@@ -9,11 +11,11 @@ async function sendContact(contact) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(contact),
-    }
-  );
+  });
 
-  const data = await response.json();
-  console.log(data);
+  if (response.ok) {
+      window.location.assign(response.url);
+  }
 }
 
 checkboxEl.addEventListener("change", (evt) => {
@@ -24,6 +26,16 @@ checkboxEl.addEventListener("change", (evt) => {
 
 formEl.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  console.log("フォーム送信イベント発火");
+
+  if (!buttonEl) {
+    console.error("buttonEl が取得できていません！");
+    return;
+  }
+
+  buttonEl.setAttribute("disabled", true);
+  buttonEl.textContent = "送信中...";
+  console.log("ボタンを無効化しました:", buttonEl);
 
   const formData = new FormData(formEl);
   const {

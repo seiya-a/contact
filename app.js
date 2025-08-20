@@ -41,57 +41,81 @@ function buildMessage({ email, name }) {
 };
 
 async function sendContact(contact) {
-  await fetch(
-    "https://ua0x84w8fc.microcms.io/api/v1/contact",
-    {
-      method: "POST",
-      headers: {
-        "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(contact),
+  try {
+    const resp = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contact),
+    });
+
+    if (resp.ok) {
+      window.location.assign(resp.url);
+    } else {
+      const error = await resp.json();
+      console.error("Failed to send contact:", error.message);
+
+      errorEl.textContent = error.message;
+      errorEl.classList.add("block");
+      errorEl.classList.remove("hidden");
+
+      buttonEl.removeAttribute("disabled");
+      buttonEl.textContent = "送信する";
     }
-  );
+  } catch (err) {
+    console.error("Error sending contact:", err);
+    errorEl.textContent = error.message;
+    errorEl.classList.add("block");
+    errorEl.classList.remove("hidden");
+
+    buttonEl.removeAttribute("disabled");
+    buttonEl.textContent = "送信する";
+  }
 }
 
 async function sendMail({ email, name }) {
   const message = buildMessage({ email, name });
 
-  const resp = await fetch("https://api.sendgrid.com/v3/mail/send",{
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
-    },
-    body: JSON.stringify(message),
-  });
-  console.log("SendGrid status:", resp.status);
-  console.log("SendGrid response:", await resp.text());
+  try {
+    const resp = await fetch("https://api.sendgrid.com/v3/mail/send",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+      },
+      body: JSON.stringify(message),
+    });
+
+    if (!resp.ok) {
+      const data = await resp.json();
+      throw new Error(`メールの送信に失敗しました:${data.errors[0].message}`);
+    }
+
+    return { ok: true };
+  } catch (err) {
+    throw err;
+  }
 }
 
 app.post("/api/contact", async (req, res) => {
-  const contact = req.body
+  const contact = req.body;
 
-  await sendContact(contact)
-  await sendMail({ email: contact.email, name: contact.name })
-  res.json({})
+  try {
+    await Promise.all([
+      sendContact(contact),
+      sendMail({ email: contact.email, name: contact.name })
+    ])
+
+    res.redirect("/complete");
+  } catch(err) {
+    console.error("error: ", err)
+    res.status(500).json({ message: err.message })
+  }
 });
 
-// app.post("/api/contact", async(req, res) => {
-//   const response = await fetch(
-//     "https://ua0x84w8fc.microcms.io/api/v1/contact",
-//     {
-//       method: "POST",
-//       headers: {
-//         "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
-//         "Content-Type": "application/json"
-//       },
-//       body: JSON.stringify(req.body),
-//     }
-//   );
-
-//   const data = await response.json();
-//   res.json(data);
-// });
+app.get("/complete", (req, res) => {
+  res.sendFile(`${__dirname}/public/complete.html`);
+});
 
 app.listen(3000, () => console.log("listening on port 3000"));
